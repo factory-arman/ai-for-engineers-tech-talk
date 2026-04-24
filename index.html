@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI for Engineers and Technical Teams</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.4.1/dist/fonts/geist-mono/style.css" />
+
+<style>
+  /* ── Factory fonts ── */
+  @font-face { font-family: 'Geist'; src: url('fonts/geist/Geist-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Geist'; src: url('fonts/geist/Geist-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Geist'; src: url('fonts/geist/Geist-SemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Geist'; src: url('fonts/geist/Geist-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Geist'; src: url('fonts/geist/Geist-ExtraBold.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: swap; }
+  /* Berkeley Mono removed per brand guide -- using Geist Mono via CDN */
+
+  :root {
+    /* Brand guide primary */
+    --factory-orange: #EE6018;
+    --factory-black: #000000;
+    --factory-surface: #161413;
+    --factory-border: #342F2D;
+    --factory-gray: #9B8E87;
+    --factory-footer: #948781;
+    --factory-white: #FFFFFF;
+    --factory-light-bg: #F2F0F0;
+    --factory-success: #6FAB78;
+    --factory-warning: #F0A330;
+    --factory-error: #D9363E;
+
+    /* Extended tungsten palette (from example) */
+    --t1: #F2F0F0; --t2: #E4E2E1; --t3: #D8D4D2;
+    --t5: #BFB7B3; --t6: #B3A9A4; --t7: #A89895; --t8: #9B8E87;
+    --t11: #736864; --t13: #59514D; --t14: #4C4542; --t15: #403A37;
+    --t16: #342F2D; --t17: #282523; --t18: #1D1B1A; --t19: #161413;
+
+    /* Safety colors (from brand palette) */
+    --jade: #5B8E63; --jade-light: #6FAB78;
+    --topaz: #E3992A; --topaz-light: #F0A330;
+    --ruby: #D9363E; --ruby-light: #E54048;
+
+    /* Slide sizing */
+    --slide-body: 1em;
+    --slide-list: 1em;
+    --slide-takeaway: 0.9em;
+    --slide-splash-title: 2.0em;
+    --slide-splash-body: 1.5em;
+    --slide-center-heading: 2.4em;
+    --slide-code: 1.00em;
+
+    /* Reveal.js theming */
+    --r-background-color: var(--t19);
+    --r-main-color: var(--t1);
+    --r-heading-color: var(--t1);
+    --r-link-color: var(--factory-orange);
+    --r-link-color-hover: var(--factory-orange);
+    --r-selection-background-color: var(--factory-orange);
+    --r-heading-font: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --r-main-font: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --r-code-font: 'Geist Mono', 'GeistMono', monospace;
+  }
+
+  /* ── Reticule grid background ── */
+  .reveal .slide-background-content {
+    background-image:
+      linear-gradient(rgba(89,81,77,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(89,81,77,0.08) 1px, transparent 1px),
+      linear-gradient(rgba(89,81,77,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(89,81,77,0.04) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position: center center;
+  }
+
+  .reveal .slides section::before {
+    content: ''; position: absolute; top: 16px; left: 16px;
+    width: 24px; height: 24px;
+    border-top: 1px solid var(--t16); border-left: 1px solid var(--t16);
+    pointer-events: none; z-index: 1;
+  }
+  .reveal .slides section::after {
+    content: ''; position: absolute; bottom: 16px; right: 16px;
+    width: 24px; height: 24px;
+    border-bottom: 1px solid var(--t16); border-right: 1px solid var(--t16);
+    pointer-events: none; z-index: 1;
+  }
+
+  .reveal .slide-background-content::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, var(--t19) 100%);
+    pointer-events: none;
+  }
+
+  /* ── Base typography ── */
+  .reveal { font-size: 32px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  .reveal h1 { font-size: 2.2em; font-weight: 400; letter-spacing: -0.03em; color: var(--t1); text-transform: none; }
+  .reveal h2 { font-size: 1.45em; font-weight: 500; letter-spacing: -0.01em; color: var(--factory-orange); margin-bottom: 0.4em; text-transform: none; }
+  .reveal h3 { font-size: 0.75em; font-weight: 400; font-family: 'Geist Mono', 'GeistMono', monospace; color: var(--t7); margin-top: -0.3em; margin-bottom: 0.4em; letter-spacing: -0.01em; text-transform: uppercase; }
+  .reveal p, .reveal li { font-size: var(--slide-body); line-height: 1.45; color: var(--t2); letter-spacing: -0.01em; margin-bottom: 0.2em; }
+  .reveal strong { color: var(--t1); font-weight: 500; }
+  .reveal ul { list-style: "›  "; padding-left: 1.4em; text-align: left; }
+  .reveal ul li { padding-left: 0.2em; text-indent: 0; margin-bottom: 0.2em; font-size: inherit; }
+  .reveal ul li::marker { color: var(--factory-orange); font-weight: 400; }
+  .reveal ul ul { list-style: "·  "; padding-left: 1.4em; }
+  .reveal ul ul li::marker { color: var(--t8); }
+  .reveal ul ul li { font-size: 0.85em; }
+  .reveal code {
+    font-family: var(--r-code-font); font-size: 0.85em;
+    background: var(--t17); padding: 0.1em 0.35em; border-radius: 4px;
+    color: var(--factory-orange);
+  }
+  .reveal pre { width: 100%; box-shadow: none; margin: 0.4em 0; }
+  .reveal pre code {
+    font-size: var(--slide-code); line-height: 1.5; padding: 1em 1.2em;
+    border-radius: 4px; background: var(--t18); border: 1px solid var(--t16);
+    max-height: 550px;
+  }
+
+  /* ── Slide layout ── */
+  .reveal .slides section {
+    text-align: left; padding: 40px 0 0;
+    display: flex !important; flex-direction: column;
+    justify-content: flex-start; align-items: center; height: 100%;
+  }
+  .reveal .slides section > * { width: 100%; max-width: 900px; }
+  .reveal .slides section.center-slide {
+    text-align: center; justify-content: center; padding-top: 0;
+  }
+
+  .slide-number { font-family: 'Geist Mono', 'GeistMono', monospace !important; font-size: 12px !important; color: var(--t11) !important; }
+
+  /* ── Components ── */
+  .accent-line {
+    width: 80px; height: 3px;
+    background: var(--factory-orange);
+    border-radius: 2px; margin: 0.8em auto;
+  }
+
+  .takeaway {
+    background: var(--t18); border-left: 3px solid var(--factory-orange);
+    border-radius: 0 4px 4px 0; padding: 0.45em 1em; margin-top: 0.5em;
+    font-size: var(--slide-takeaway); color: var(--t3);
+  }
+  .takeaway strong { color: var(--factory-orange); }
+
+  .tag {
+    display: inline-block; background: var(--t17); border: 1px solid var(--t15);
+    color: var(--factory-orange); padding: 0.15em 0.55em; border-radius: 4px;
+    font-size: 0.6em; font-family: var(--r-code-font); margin: 0.1em;
+  }
+  .tag.green { color: var(--jade-light); border-color: var(--jade); }
+  .tag.blue { color: var(--t5); border-color: var(--t13); }
+  .tag.red { color: var(--ruby-light); border-color: var(--ruby); }
+  .tag.yellow { color: var(--topaz-light); border-color: var(--topaz); }
+
+  .number-list { counter-reset: item; list-style: none !important; padding-left: 0; text-align: left; font-size: var(--slide-list); }
+  .number-list li { counter-increment: item; position: relative; padding-left: 2.2em; margin-bottom: 0.15em; font-size: inherit; }
+  .number-list li::before {
+    content: counter(item); position: absolute; left: 0; top: 0.45em;
+    display: flex; align-items: center; justify-content: center;
+    width: 1.4em; height: 1.4em; background: var(--factory-orange);
+    color: var(--t19); border-radius: 50%; font-weight: 500; font-size: 0.7em; text-indent: 0;
+  }
+  .number-list li .sub { display: block; font-size: 0.80em; color: var(--t7); padding-left: 0; margin-top: 0.1em; }
+
+  .stats-row { display: flex; justify-content: center; gap: 2em; margin-top: 1em; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 1.4em; font-weight: 400; color: var(--factory-orange); font-family: 'Geist', sans-serif; }
+  .stat .label { font-size: 0.5em; color: var(--t8); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .two-col { display: flex; gap: 2em; margin-top: 0.5em; }
+  .two-col .col { flex: 1; }
+  .two-col .col h3 { font-size: 0.85em; color: var(--factory-orange); margin-bottom: 0.3em; font-weight: 400; }
+
+  .flow-pipeline { display: flex; flex-wrap: wrap; gap: 0.35em; align-items: center; margin: 0.6em 0; }
+  .flow-step {
+    display: inline-flex; align-items: center; gap: 0.4em;
+    background: var(--t17); border: 1px solid var(--t15); border-radius: 6px;
+    padding: 0.35em 0.7em; font-size: 0.6em; color: var(--t2); white-space: nowrap;
+  }
+  .flow-step.active { border-color: var(--factory-orange); background: rgba(238,96,24,0.1); color: var(--factory-orange); }
+  .flow-step.done { border-color: var(--jade); background: rgba(91,142,99,0.1); color: var(--jade-light); }
+  .flow-arrow { color: var(--t13); font-size: 0.7em; margin: 0 0.1em; }
+
+  .controls { color: var(--factory-orange) !important; }
+  .progress span { background: var(--factory-orange) !important; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: Title -->
+<!-- ============================================================ -->
+<section class="center-slide" data-background-color="#161413">
+  <h1 style="font-size:var(--slide-splash-title); margin-bottom:0;">AI for Engineers<br>and Technical Teams</h1>
+  <div class="accent-line"></div>
+  <div style="display:flex; align-items:center; justify-content:center; margin:0.3em auto 0.6em;">
+    <img src="images/factory-wordmark.png" alt="Factory" style="height:80px;">
+  </div>
+  <p style="font-size:var(--slide-body); color:var(--t7);">Arman Bolat | Member of Technical Staff</p>
+  <aside class="notes">
+    Welcome everyone. I'm Arman, Member of Technical Staff at Factory. Today I'll share what I've learned building and using AI coding agents in production -- not the hype, the actual workflows that work. ~30s
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: The Numbers -->
+<!-- ============================================================ -->
+<section>
+  <h2>The State of AI in Engineering</h2>
+  <h3>Pragmatic Engineer Survey, March 2026 · 906 engineers</h3>
+  <div class="stats-row">
+    <div class="stat"><div class="num">95%</div><div class="label">Use AI weekly</div></div>
+    <div class="stat"><div class="num">75%</div><div class="label">AI for half+ of work</div></div>
+    <div class="stat"><div class="num">55%</div><div class="label">Use agents regularly</div></div>
+  </div>
+  <ul style="margin-top:1em;">
+    <li><strong>Staff+ engineers</strong> are the heaviest agent users (63.5%), not juniors</li>
+    <li>Engineers juggle <strong>2-4 tools</strong> simultaneously</li>
+  </ul>
+  <aside class="notes">
+    Let's ground this with data. Adoption is near-universal. The surprise: senior engineers use agents the most. They understand leverage. Agent usage went from ~0% to 55% in two years. This is moving fast. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: The Productivity Gap -->
+<!-- ============================================================ -->
+<section>
+  <h2>The Productivity Gap</h2>
+  <div class="stats-row">
+    <div class="stat"><div class="num">93%</div><div class="label">Adoption</div><div class="label" style="font-size:0.5em;opacity:0.6;">Stack Overflow, 49K devs, 2025</div></div>
+    <div class="stat"><div class="num" style="color:var(--factory-warning);">~10%</div><div class="label">Measured gains</div><div class="label" style="font-size:0.5em;opacity:0.6;">DX, 400 companies, Mar 2026</div></div>
+  </div>
+  <ul style="margin-top:1em;">
+    <li>Most engineers use agents like a <strong>fancy autocomplete</strong></li>
+    <li>The difference between 10% gains and 10x gains is <strong>HOW</strong> you use these tools</li>
+    <li>You're about to learn the <strong>HOW</strong></li>
+  </ul>
+  <aside class="notes">
+    Here's the gap. Stack Overflow says 93% adoption across 49K developers. DX studied 400 companies and found only ~10% throughput gains. Why? Because most people use agents the same way they used autocomplete -- one line at a time. The engineers getting 10x results are doing something fundamentally different. That's what we'll cover. ~45s
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: What Is an AI Agent? -->
+<!-- ============================================================ -->
+<section>
+  <h2>What Is an AI Agent?</h2>
+  <h3>LLM + Tools + Runtime</h3>
+  <div class="stats-row">
+    <div class="stat"><div class="num" style="font-size:1.1em;">LLM</div><div class="label">Reasons & generates</div></div>
+    <div class="stat"><div class="num" style="font-size:1.1em;">Tools</div><div class="label">Acts on the world</div></div>
+    <div class="stat"><div class="num" style="font-size:1.1em;">Runtime</div><div class="label">Orchestrates the loop</div></div>
+  </div>
+  <ul style="margin-top:1em;">
+    <li>The <strong>LLM</strong> reasons and generates</li>
+    <li><strong>Tools</strong> let it act -- run commands, search the web, read files, call APIs</li>
+    <li>The <strong>runtime</strong> orchestrates the loop: read → think → act → observe → repeat</li>
+  </ul>
+  <div style="margin-top:0.6em;">
+    <div class="flow-pipeline">
+      <span class="flow-step active">Droid</span>
+      <span class="flow-step">Claude Code</span>
+      <span class="flow-step">Codex</span>
+      <span class="flow-step">Cursor</span>
+      <span class="flow-step">Windsurf</span>
+    </div>
+  </div>
+  <aside class="notes">
+    Before we dive into use cases, let's define what we're talking about. An AI agent is not autocomplete, not a chatbot. It's three things: an LLM that reasons, tools that let it act in the real world, and a runtime that orchestrates the loop. This architecture is converging across all major agents. I'll demo with Droid today, but these concepts apply to all of them. ~45s
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: Use Case 1 -- Codebase Q&A (moved before Instructions) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 1: Codebase Q&A & Onboarding</h2>
+  <h3>Zero risk · Immediate value · The simplest starting point</h3>
+  <ul>
+    <li>"How does authentication work in this codebase?"</li>
+    <li>"How do I add a new API endpoint?"</li>
+    <li>"Which recent commit broke the login flow?" <span class="tag">runs git log</span></li>
+    <li>"Why does this function have 15 arguments?" <span class="tag">checks git history</span></li>
+    <li>"What did I ship this week?" <span class="tag green">standup summary</span></li>
+  </ul>
+  <p style="color:var(--t5); margin-top:0.6em; font-size:0.9em;">No special prompting. No indexing. No setup. Just ask.</p>
+  <div class="takeaway">
+    At Factory, new engineers use a coding agent on day one. Onboarding went from 2 weeks to 2 days.
+  </div>
+  <aside class="notes">
+    Start here. Zero risk -- the agent only reads, never writes. Ask it what you'd ask a senior engineer. No setup needed. At Factory, new hires use a coding agent from day one. The ramp-up reduction is dramatic. This is the best way to get comfortable with agents before using them to write code. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: Codebase Q&A Going Deeper (enhanced with Meta case study) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Codebase Q&A: Going Deeper</h2>
+  <div class="stats-row">
+    <div class="stat"><div class="num">91→33</div><div class="label">Days to 10th PR</div><div class="label" style="font-size:0.5em;opacity:0.6;">DX, 400 companies, Apr 2026</div></div>
+    <div class="stat"><div class="num">Day 2</div><div class="label">First customer value shipped</div><div class="label" style="font-size:0.5em;opacity:0.6;">incident.io blog, 2025</div></div>
+    <div class="stat"><div class="num">~2d→30m</div><div class="label">Workflow guidance</div><div class="label" style="font-size:0.5em;opacity:0.6;">Meta Engineering, Apr 2026</div></div>
+  </div>
+  <ul style="margin-top:0.8em;">
+    <li><strong>Meta's "Compass, not encyclopedia":</strong> 50+ agents read a 4,100-file pipeline, produced 59 concise context files (25-35 lines each), documented 50+ non-obvious patterns</li>
+    <li><strong>Five questions per module:</strong> <em>what does it do, how to modify, what breaks, dependencies, what's undocumented</em></li>
+    <li>Pull in context from Linear/Jira tickets, docs, observability tools</li>
+    <li>Feed learnings back into AGENTS.md for the <strong>next new hire</strong></li>
+  </ul>
+  <aside class="notes">
+    DX Research studied 400 companies. Time to 10th PR dropped from 91 to 33 days with daily AI use. Meta used 50+ agents to read their 4,100-file pipeline and produce 59 concise context files -- 25-35 lines each. They documented 50+ non-obvious patterns no one had written down. Each agent answered five questions per module: what does it do, how to modify, what breaks, dependencies, and what tribal knowledge is buried in comments. This is something you can start doing on Monday morning. ~1.5min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: Agent Instructions (moved after Q&A to show value first) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Your Agent Is Only as Good as Its Instructions</h2>
+  <h3>AGENTS.md · CLAUDE.md · The concept is universal</h3>
+  <ul>
+    <li><strong>What to include:</strong> build/test/lint commands, code style rules, architectural decisions, dev environment quirks</li>
+    <li><strong>Keep it SHORT</strong> (~100 lines). Too much guidance becomes non-guidance.</li>
+    <li>Think of it as <strong>onboarding a new hire</strong>: tell them the non-obvious stuff</li>
+  </ul>
+  <div style="margin-top:0.6em;">
+    <p style="color:var(--t7); font-size:0.8em; margin-bottom:0.3em;">The hierarchy:</p>
+    <div class="flow-pipeline">
+      <span class="flow-step active">Project root</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Subdirectories</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Personal overrides</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Global</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Enterprise</span>
+    </div>
+  </div>
+  <aside class="notes">
+    Now that you've seen what agents can do, here's how to make them better. A file the agent reads at session start. AGENTS.md in Droid, CLAUDE.md in Claude Code -- same idea. Keep it short. OpenAI tried a massive one and it failed. Think new-hire onboarding doc: only the non-obvious stuff. These nest -- subdirectory files load on demand, shared via git. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: Skills (moved after Q&A to show value first) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Skills Turn One-Time Solutions into Reusable Knowledge</h2>
+  <h3>Composable procedural knowledge for agents</h3>
+  <ul>
+    <li>Folders with instructions and scripts that teach agents specific jobs</li>
+    <li><strong>Progressive disclosure</strong> -- only metadata loaded initially, full content on demand</li>
+    <li>Hundreds of skills without bloating context</li>
+    <li><strong>Skills can include scripts as tools</strong> -- self-documenting, modifiable, live in the file system</li>
+  </ul>
+  <div style="margin-top:0.5em;">
+    <p style="color:var(--t7); font-size:0.8em; margin-bottom:0.3em;">Examples:</p>
+    <div class="flow-pipeline">
+      <span class="flow-step active"><code>/fix-issue 1234</code></span>
+      <span class="flow-step active"><code>/incident-runbook</code></span>
+      <span class="flow-step active"><code>/code-review</code></span>
+    </div>
+  </div>
+  <aside class="notes">
+    Skills are runbooks the agent follows. Not prompt templates -- structured procedures with scripts. The key innovation is progressive disclosure: the agent sees metadata for hundreds of skills but only loads the full content when it decides to use one. This keeps context clean. And it's not just engineers -- teams in finance, legal, and recruiting are building skills too. Skills complement MCP tools: MCP provides the connection to external services, skills provide the expertise for how to use them. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: Use Case 2 -- Code Review & Testing -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 2: Code Review & Testing</h2>
+  <h3>Low risk · High leverage</h3>
+  <ul>
+    <li>Agent as <span class="tag green">FIRST pass</span> -- logic errors, security, style violations</li>
+    <li>Human review as <span class="tag blue">SECOND pass</span> -- business logic, architecture</li>
+    <li>Reduces cycle time by <strong>~3.5 hours per PR</strong></li>
+    <li>Can be configured as <strong>automated PR reviewers</strong> in your CI pipeline</li>
+  </ul>
+  <div style="margin-top:0.6em;">
+    <p style="color:var(--t7); font-size:0.8em; margin-bottom:0.3em;">The writer/reviewer pattern:</p>
+    <div class="flow-pipeline">
+      <span class="flow-step active">Agent writes code</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Separate agent reviews</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step done">Human final review</span>
+    </div>
+  </div>
+  <aside class="notes">
+    Natural second step. Agent catches mechanical issues, human focuses on judgment calls. The writer/reviewer pattern is powerful: two separate agent sessions -- one writes code, another reviews it. The reviewer has fresh context and isn't biased toward code it wrote. For tests: be prescriptive. Encourage minimalist e2e tests over implementation-specific unit tests. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9b: Code Review Demo -->
+<!-- ============================================================ -->
+<section class="center-slide">
+  <h2 style="font-size:1.1em; margin-bottom:0.15em;">Automated PR Review</h2>
+  <p style="font-size:0.65em; color:var(--t7); margin-bottom:0.3em;">Droid reviews every PR -- catches schema issues, security gaps, and logic errors before humans look at it</p>
+  <img src="images/code-review.png" alt="Droid automated code review on a GitHub PR" style="max-height:560px; border-radius:10px; box-shadow:0 4px 24px rgba(0,0,0,0.5);">
+  <aside class="notes">
+    Here's what this looks like in practice. This is a real PR on our codebase. Droid flagged that the maxAutonomyForMcp field accepts an "off" value that the UI doesn't support -- a subtle schema mismatch a human reviewer might miss. This runs automatically on every PR in CI. ~30s
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: Use Case 3 -- Coding (enhanced OpenAI stat) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 3: Coding</h2>
+  <h3>Where most daily work happens</h3>
+  <p style="color:var(--t5); font-size:0.85em;">This is not vibe coding -- vibe coding works for prototypes, but production needs structure.</p>
+  <ol class="number-list" style="margin-top:0.4em;">
+    <li><strong>Explore</strong><span class="sub">Agent reads files, understands patterns. No changes.</span></li>
+    <li><strong>Plan</strong><span class="sub">Agent creates detailed plan. You review and edit it.</span></li>
+    <li><strong>Implement</strong><span class="sub">Agent codes against the plan, runs tests.</span></li>
+    <li><strong>Commit</strong><span class="sub">Agent creates commit, pushes, opens PR.</span></li>
+  </ol>
+  <div class="takeaway">
+    Stripe ships <strong>1,300+ zero-human-code PRs per week</strong>. OpenAI: team of 3-7 built <strong>1M lines, 0 manually-written code</strong>, in 1/10th the time. These aren't toy projects -- but they follow this loop.
+  </div>
+  <aside class="notes">
+    This four-phase pattern works across all agents. This is not vibe coding. Vibe coding is fine for prototypes, but for production you need structure. The plan is your checkpoint -- review it, edit it, then let the agent execute. The OpenAI stat: a team of 3 growing to 7 built an internal product with ~1M lines, averaging 3.5 PRs per engineer per day -- all agent-written. Use subagents to keep exploration separate from your main context. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: Pre-Planning (enhanced with prompt example) -->
+<!-- ============================================================ -->
+<section>
+  <h2>15 Minutes of Planning Saves 2 Hours of Corrections</h2>
+  <h3>The secret to high success rates</h3>
+  <ul>
+    <li><strong>What you want at the end</strong> -- requirements, not implementation details</li>
+    <li><strong>Which patterns</strong> in the codebase to follow</li>
+    <li><strong>Constraints, edge cases</strong>, and <strong>files that will change</strong></li>
+    <li><strong>How to verify</strong> it works</li>
+  </ul>
+  <div class="two-col" style="margin-top:0.5em;">
+    <div class="col">
+      <p style="font-size:0.7em; color:var(--ruby-light); font-weight:500; margin-bottom:0.2em;">Vague prompt:</p>
+      <p style="font-size:0.7em; color:var(--t5);">"Add user authentication"</p>
+    </div>
+    <div class="col">
+      <p style="font-size:0.7em; color:var(--jade-light); font-weight:500; margin-bottom:0.2em;">Effective prompt:</p>
+      <p style="font-size:0.7em; color:var(--t5);">"Add JWT auth following the pattern in src/middleware/auth.ts. Include refresh tokens and rate limiting on login. Write integration tests using UserRepository."</p>
+    </div>
+  </div>
+  <aside class="notes">
+    This is the single most impactful habit. 15 minutes of planning saves 2 hours of corrections. I often do this in a separate conversation -- the agent and I explore the codebase together, build a plan, and then I paste that plan into a fresh session for implementation. Notice the difference: the vague prompt gives the agent no direction. The specific one points to patterns, states requirements, and tells it how to verify. Don't over-constrain the implementation -- define the what, not the how. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: Verification & Iteration -->
+<!-- ============================================================ -->
+<section>
+  <h2>Give the Agent a Way to Check Its Own Work</h2>
+  <ul>
+    <li>Unit tests and integration tests</li>
+    <li>Screenshots (Puppeteer, browser automation)</li>
+    <li>A running dev server it can hit</li>
+    <li>Expected output to compare against</li>
+    <li><strong>Multimodal input</strong> -- drop in a design mock, give it a dev server, it builds the UI in a loop</li>
+  </ul>
+  <div style="margin-top:0.5em;">
+    <p style="color:var(--factory-orange); font-size:0.9em; font-weight:400; margin-bottom:0.3em;">Context management -- the core constraint:</p>
+    <ul>
+      <li><strong>Clear context</strong> between unrelated tasks</li>
+      <li>After 2 failed corrections: <strong>start fresh</strong> with a better prompt</li>
+    </ul>
+  </div>
+  <aside class="notes">
+    The single highest-leverage thing: give the agent feedback tools. When it can run tests, take screenshots, check its own work -- success rates jump dramatically. Think of it as guides and sensors: instructions guide the agent BEFORE it acts, tests and linters are sensors that give feedback AFTER it acts. You need both. Context management is critical: clear context between tasks. If you're 2 corrections deep, start a fresh session with a better prompt -- don't pollute the context with failed attempts. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: Use Case 4 -- PRDs & Engineering Design Docs (enhanced) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 4: PRDs & Engineering Design Docs</h2>
+  <h3>Agents as your first draft partner for technical writing</h3>
+  <ul>
+    <li><strong>Product requirements:</strong> Describe what you want in a few sentences → agent generates structured PRD with user stories, acceptance criteria, edge cases</li>
+    <li><strong>The interview pattern:</strong> Agent asks YOU questions to extract requirements you hadn't thought of, then drafts the doc</li>
+    <li><strong>Engineering design docs:</strong> Agent reads the codebase → drafts architecture, API contracts, trade-offs</li>
+    <li><strong>Deep research:</strong> Agent searches the web for prior art and compares approaches before drafting</li>
+  </ul>
+  <div class="takeaway">
+    The first draft is 80% there -- your job is the last 20% of judgment.
+  </div>
+  <aside class="notes">
+    Agents are excellent first-draft partners for technical writing. The interview pattern is powerful: instead of you writing the spec, the agent asks you questions -- "What happens if the user loses connectivity mid-checkout? Do you need idempotency?" -- and then drafts the doc from your answers. It surfaces things you hadn't thought about. For engineering design docs, the agent reads the codebase and understands existing patterns before drafting. And it can do deep research -- searching the web for prior art and comparing approaches. The first draft is typically 80% right; your job is the last 20% of judgment and context. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: Use Case 5 -- Project Management (enhanced) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 5: Project Management</h2>
+  <h3>Handling coordination work that eats into engineering time</h3>
+  <ul>
+    <li><strong>Standup summaries:</strong> "What did I ship this week?" → agent reads git log, generates a summary</li>
+    <li><strong>Ticket triage:</strong> Auto-classify issues by severity and component, route to the right team</li>
+    <li><strong>Sprint tracking:</strong> Flag at-risk items, surface stale PRs, identify blockers</li>
+    <li><strong>Follow-ups & release notes:</strong> Auto-create tickets from PR comments and post-mortems; diff between tags for changelogs</li>
+  </ul>
+  <div class="takeaway">
+    Engineers spend <strong>30-40% of time</strong> on coordination, not coding. Let agents handle the glue work.
+  </div>
+  <aside class="notes">
+    Agents handling the glue work. The standup summary is a great entry point -- every Monday, ask the agent "What did I ship this week?" and it reads your git log, correlates with tickets, and gives you a clean summary. Beyond standups: ticket triage, sprint tracking, follow-up generation from PR comments or meeting notes, and release notes from tag diffs. Studies show engineers spend 30-40% of their time on coordination, not coding. Agents can take on a big chunk of that overhead. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15: Use Case 6 -- Product QA (enhanced) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 6: Product QA</h2>
+  <h3>Your QA team that never sleeps</h3>
+  <ul>
+    <li><strong>Browser-driven smoke tests:</strong> End-to-end user flow validation -- signup, checkout, core workflows</li>
+    <li><strong>Visual regression:</strong> Screenshot comparison between builds, flagging layout shifts</li>
+    <li><strong>Accessibility auditing:</strong> Automated WCAG compliance checks, contrast issues, missing labels</li>
+    <li><strong>Test plan generation:</strong> Describe what to test in natural language, agent generates and runs the suite</li>
+    <li><strong>Flaky test management:</strong> Detect flaky tests in CI, agent attempts the fix and opens a PR</li>
+  </ul>
+  <div class="takeaway">
+    Stripe auto-detects flaky tests, creates a ticket with a <strong>"Fix with agent"</strong> button -- agent investigates, writes the fix, opens a PR.
+  </div>
+  <aside class="notes">
+    Agents as QA that never sleeps. These run on every PR or on a schedule. The Stripe example is telling -- they auto-detect flaky tests in CI, create a ticket with a "Start Minion" button, and the agent investigates, writes the fix, pushes to CI for at most 2 rounds of iteration, and opens a PR. The engineer only steps in at the review step. Browser-driven smoke tests are another quick win: describe your core user flow in natural language, and the agent generates and executes the test suite. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15b: Product QA Demo -->
+<!-- ============================================================ -->
+<section class="center-slide">
+  <h2 style="font-size:1.1em; margin-bottom:0.15em;">Automated QA Report</h2>
+  <p style="font-size:0.65em; color:var(--t7); margin-bottom:0.3em;">Droid launches the CLI, runs test cases, captures TUI snapshots, and reports results -- all on every PR</p>
+  <img src="images/qa.png" alt="Droid CLI QA report with test results and TUI snapshots" style="width:auto; max-height:560px; border-radius:10px; box-shadow:0 4px 24px rgba(0,0,0,0.5);">
+  <aside class="notes">
+    This is a real QA report from our CI pipeline. Droid launched the CLI, tested keyboard shortcuts -- Ctrl+J opens changelog, Ctrl+J again dismisses it, verified Ctrl+K does NOT toggle it -- and captured TUI snapshots as evidence. Four test cases, all automated, all passing. This runs on every PR that touches the CLI. ~30s
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 16: Use Case 7 -- Security Review (enhanced) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 7: Security Review</h2>
+  <h3>A security-aware layer on every change</h3>
+  <ul>
+    <li><strong>PR security scanning:</strong> Hardcoded secrets, injection vulnerabilities, insecure API patterns</li>
+    <li><strong>Dependency auditing:</strong> Known CVEs, outdated packages with security patches</li>
+    <li><strong>Context-aware analysis:</strong> Traces data flow across files -- catches what regex scanners miss</li>
+    <li><strong>IAM review & threat modeling:</strong> Overly broad access, new endpoint attack vectors</li>
+  </ul>
+  <div class="takeaway">
+    Unlike SAST tools that pattern-match, agents <strong>understand context</strong> -- tracing user input through 4 files to a shell command.
+  </div>
+  <aside class="notes">
+    Agents as a security layer on every change. The key advantage over traditional security scanning tools is context awareness. A regex-based scanner checks one file at a time. An agent traces user input through your request handler, into a service layer, through a utility function, and into a shell command -- and flags the injection risk. That data flow might span 4 files and wouldn't show up in any single-file scan. Same for dependency auditing: the agent understands whether a CVE actually affects your usage pattern, not just whether the package is present. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 17: Use Case 8 -- Incident Response (enhanced with stats) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Use Case 8: Incident Response</h2>
+  <h3>Agent as first responder · Investigating while you're reading the alert</h3>
+  <ol class="number-list">
+    <li>Alert fires <span class="sub">PagerDuty, CloudWatch, etc.</span></li>
+    <li>Agent investigates <span class="sub">pulls logs, queries metrics, checks recent deploys</span></li>
+    <li>Structured findings <span class="sub">root cause hypothesis presented to human</span></li>
+    <li>Human validates and approves the fix</li>
+    <li>Agent executes fix, verifies, writes post-mortem</li>
+  </ol>
+  <div class="stats-row" style="margin-top:0.4em;">
+    <div class="stat"><div class="num">75%</div><div class="label">Lower MTTR</div></div>
+    <div class="stat"><div class="num">94%</div><div class="label">Root cause accuracy</div></div>
+    <div class="stat"><div class="num">2h→28m</div><div class="label">Resolution time</div></div>
+  </div>
+  <aside class="notes">
+    The agent as first responder -- it investigates while the human is still reading the alert. AWS DevOps Agent customers report 75% lower mean time to resolution, 94% root cause accuracy, and investigation dropping from 2 hours to 28 minutes. The safety model is critical: read operations (logs, metrics, configs) are autonomous; write operations (deploying a fix) require human approval. Skills connect to PagerDuty, Grafana, log aggregators. An /incident-runbook skill follows your team's established procedures. ~1.5min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 18: Respect the Exponential -->
+<!-- ============================================================ -->
+<section>
+  <h2>Respect the Exponential</h2>
+  <ul>
+    <li>The length of tasks AI can handle is <strong>doubling every seven months</strong></li>
+    <li>Right now: ~1 hour tasks. Next year: full day. Year after: full week.</li>
+    <li>If we demand reading/writing every line of code, <strong>we become the bottleneck</strong></li>
+    <li>The key shift: <strong>forget the code, not the product.</strong> We stopped reading assembly output. We'll stop reading AI-generated code. But we'll never stop verifying the product works.</li>
+    <li>Managing work you didn't write is <strong>not a new problem</strong> -- every PM, CTO, and CEO already does this. Engineers are just not used to it yet.</li>
+  </ul>
+  <aside class="notes">
+    Before we close: this is the exponential we're on. Task complexity AI handles doubles every 7 months. The key insight: forget the code, not the product. We stopped reading assembly when compilers got good enough. We verified at a higher level -- acceptance tests, integration tests, product behavior. The same transition is happening now. And this isn't even a new problem: every PM reviews engineering work without reading every line. Every CTO manages experts in domains they don't fully understand. They verify at the right abstraction level. Engineers are just not used to delegating like this. ~1.5min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 19: Adoption Path & Takeaways (enhanced with CTA) -->
+<!-- ============================================================ -->
+<section>
+  <h2>Start with Questions, End with Automations</h2>
+  <ul>
+    <li><strong>The gap is the HOW, not the tools.</strong> Your instructions and skills are the difference.</li>
+    <li><strong>Be the PM, not the typist.</strong> 15 minutes of planning > 2 hours of corrections.</li>
+    <li><strong>Verify at the product level.</strong> Tests, screenshots, expected outputs.</li>
+    <li><strong>Respect the exponential.</strong> Start building the muscle now.</li>
+    <li><strong>Automate yourself away.</strong></li>
+  </ul>
+  <div class="takeaway">
+    <strong>Try this today:</strong> Open a terminal. Start an agent in your codebase. Ask it "How does authentication work here?" That's it. You'll be hooked.
+  </div>
+  <aside class="notes">
+    Here's the adoption path. Each step builds on the previous. You can start today with codebase Q&A -- literally zero risk. The learning flywheel: skills and instructions shared via git compound institutional knowledge. When your teammate clones the repo, they get every skill and configuration you've built. The agent on day 30 is dramatically better than on day one. Five takeaways: the gap is the how, be the PM, verify the product, respect the exponential, automate yourself away. And try it today -- open an agent in your codebase and ask it a question. ~1min
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 20: Q&A -->
+<!-- ============================================================ -->
+<section class="center-slide" data-background-color="#161413">
+  <h1 style="font-size:var(--slide-splash-title);">Q&A</h1>
+  <div class="accent-line"></div>
+  <div style="display:flex; align-items:center; justify-content:center; margin:0.8em auto 0.6em;">
+    <img src="images/factory-wordmark.png" alt="Factory" style="height:96px;">
+  </div>
+  <p style="font-size:var(--slide-body); color:var(--t7);">Arman Bolat | Member of Technical Staff</p>
+  <aside class="notes">
+    Open up Q&A. Prepared seeds: "What about code quality / AI slop?" "Security concerns with agent access?" "Will this replace engineers?" "Where do agents still fail badly?" "How do junior engineers learn in this world?" ~5-10min Q&A.
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280,
+  height: 800,
+  hash: true,
+  slideNumber: 'c/t',
+  showSlideNumber: 'all',
+  controls: true,
+  controlsTutorial: false,
+  controlsLayout: 'bottom-right',
+  progress: true,
+  center: false,
+  transition: 'none',
+  transitionSpeed: 'default',
+  backgroundTransition: 'fade',
+  totalTime: 1500,
+  plugins: [ RevealHighlight, RevealNotes ]
+});
+</script>
+</body>
+</html>
